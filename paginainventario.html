@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist de Herramientas</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #121212;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 650px;
+            margin: auto;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+        }
+
+        h2 {
+            text-align: center;
+            color: #ffffff;
+        }
+
+        textarea {
+            width: 100%;
+            height: 140px;
+            padding: 10px;
+            background: #2a2a2a;
+            color: #fff;
+            border: 1px solid #444;
+            border-radius: 8px;
+        }
+
+        .tool-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .generate-btn {
+            background: #333;
+            color: #fff;
+        }
+
+        .pdf-btn {
+            background: #0056d6;
+            color: white;
+        }
+
+        .whatsapp-btn {
+            background: #128c7e;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Checklist de Inventario</h2>
+
+        <textarea id="toolInput" placeholder="Pegá aquí la lista de herramientas, una por línea..."></textarea>
+        <button class="generate-btn" onclick="generateList()">Generar Checklist</button>
+
+        <div id="toolList"></div>
+
+        <button class="pdf-btn" onclick="generatePDF()">Generar PDF</button>
+
+        <!-- BOTONES NUEVOS -->
+        <button class="whatsapp-btn" onclick="sendToEncargado()">Enviar al Encargado</button>
+        <button class="whatsapp-btn" onclick="sendToSuboficial()">Enviar al Suboficial a Cargo</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+
+    <script>
+        function generateList() {
+            let text = document.getElementById("toolInput").value.trim();
+            let lines = text.split("\n");
+
+            let list = document.getElementById("toolList");
+            list.innerHTML = "";
+
+            lines.forEach(tool => {
+                if (tool.trim() !== "") {
+                    let div = document.createElement("div");
+                    div.className = "tool-item";
+                    div.innerHTML = `<span>${tool}</span><input type="checkbox">`;
+                    list.appendChild(div);
+                }
+            });
+        }
+
+        // ---------------- PDF FINAL ----------------
+        function generatePDF() {
+            const element = document.createElement("div");
+            element.style.fontFamily = "Arial";
+            element.style.padding = "20px";
+            element.style.color = "#000";
+
+            let title = document.createElement("h2");
+            title.innerText = "Checklist de Herramientas";
+            title.style.textAlign = "center";
+            title.style.color = "#000";
+            element.appendChild(title);
+
+            let presentesTitle = document.createElement("h3");
+            presentesTitle.innerText = "✔️ Herramientas Presentes";
+            presentesTitle.style.color = "#006400";
+            element.appendChild(presentesTitle);
+
+            let presentesList = document.createElement("ul");
+
+            let faltantesTitle = document.createElement("h3");
+            faltantesTitle.innerText = "❌ Herramientas Faltantes";
+            faltantesTitle.style.color = "#8B0000";
+            faltantesTitle.style.marginTop = "20px";
+            element.appendChild(faltantesTitle);
+
+            let faltantesList = document.createElement("ul");
+
+            document.querySelectorAll(".tool-item").forEach(item => {
+                let name = item.querySelector("span").innerText;
+                let isChecked = item.querySelector("input").checked;
+
+                let li = document.createElement("li");
+                li.style.marginBottom = "4px";
+
+                if (isChecked) {
+                    li.innerText = "✔️ " + name;
+                    presentesList.appendChild(li);
+                } else {
+                    li.innerText = "❌ " + name;
+                    faltantesList.appendChild(li);
+                }
+            });
+
+            element.appendChild(presentesList);
+            element.appendChild(faltantesList);
+
+            html2pdf().from(element).set({
+                margin: 10,
+                filename: "Checklist_Herramientas.pdf",
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+            }).save();
+        }
+
+        // ---------------- WHATSAPP ----------------
+        function buildMessage() {
+            let checked = [];
+
+            document.querySelectorAll(".tool-item").forEach(item => {
+                let name = item.querySelector("span").innerText;
+                let isChecked = item.querySelector("input").checked;
+                checked.push(`${isChecked ? "✔️" : "❌"} ${name}`);
+            });
+
+            return encodeURIComponent("Checklist de herramientas:\n\n" + checked.join("\n"));
+        }
+
+        function sendToEncargado() {
+            let message = buildMessage();
+            window.open(`https://wa.me/?text=${message}`, "_blank");
+        }
+
+        function sendToSuboficial() {
+            let message = buildMessage();
+            window.open(`https://wa.me/?text=${message}`, "_blank");
+        }
+    </script>
+
+</body>
+
+</html>
