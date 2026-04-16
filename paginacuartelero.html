@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Despacho – Malvinas Argentinas</title>
+    <style>
+        :root {
+            --bg: #0b1220;
+            --card: #111a2e;
+            --text: #eaf0ff;
+            --muted: #a9b7d9;
+            --accent: #ff3b3b;
+            --ok: #20d38a;
+            --border: rgba(255, 255, 255, .12);
+            --shadow: 0 14px 40px rgba(0, 0, 0, .35);
+            --radius: 18px;
+            --font: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--font);
+            color: var(--text);
+            background:
+                radial-gradient(1100px 500px at 10% 0%, rgba(255, 59, 59, .28), transparent 60%),
+                radial-gradient(800px 400px at 90% 10%, rgba(32, 211, 138, .20), transparent 55%),
+                linear-gradient(180deg, #070b14, var(--bg));
+        }
+
+        .wrap {
+            max-width: 1020px;
+            margin: 0 auto;
+            padding: 16px 14px 32px;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 8px 4px 12px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .badge {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, rgba(255, 59, 59, .95), rgba(32, 211, 138, .75));
+            box-shadow: var(--shadow);
+            font-size: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 18px;
+            letter-spacing: .2px;
+        }
+
+        .sub {
+            margin-top: 2px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .clock {
+            text-align: right;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.2;
+        }
+
+        .clock strong {
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1.05fr .95fr;
+            gap: 14px;
+        }
+
+        @media (max-width: 900px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: rgba(17, 26, 46, .86);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .head {
+            padding: 12px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            background: linear-gradient(180deg, rgba(255, 255, 255, .04), transparent);
+        }
+
+        .head h2 {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .content {
+            padding: 14px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            color: var(--muted);
+            margin: 8px 0 6px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            background: rgba(10, 15, 28, .55);
+            border: 1px solid rgba(255, 255, 255, .14);
+            color: var(--text);
+            border-radius: 12px;
+            padding: 14px 12px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        input::placeholder {
+            color: rgba(234, 240, 255, .42);
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        @media (max-width: 520px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chipRow {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .chip {
+            padding: 10px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .08);
+            border: 1px solid rgba(255, 255, 255, .14);
+            color: var(--text);
+            font-weight: 800;
+            font-size: 14px;
+            user-select: none;
+            cursor: pointer;
+        }
+
+        .chip.active {
+            background: rgba(32, 211, 138, .18);
+            border-color: rgba(32, 211, 138, .35);
+        }
+
+        .btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        button {
+            border: none;
+            border-radius: 14px;
+            padding: 14px 14px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            user-select: none;
+            color: #051018;
+            transition: transform .04s ease;
+        }
+
+        button:active {
+            transform: scale(.99);
+        }
+
+        .primary {
+            background: linear-gradient(135deg, rgba(32, 211, 138, 1), rgba(32, 211, 138, .7));
+        }
+
+        .danger {
+            background: linear-gradient(135deg, rgba(255, 59, 59, 1), rgba(255, 59, 59, .72));
+        }
+
+        .ghost {
+            background: rgba(255, 255, 255, .08);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, .16);
+            font-weight: 700;
+        }
+
+        .msgBox {
+            background: rgba(10, 15, 28, .55);
+            border: 1px dashed rgba(255, 255, 255, .20);
+            border-radius: 14px;
+            padding: 12px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+            white-space: pre-wrap;
+            font-size: 14px;
+            color: rgba(234, 240, 255, .96);
+            min-height: 180px;
+        }
+
+        .mapWrap {
+            height: 360px;
+            background: rgba(0, 0, 0, .25);
+            border-top: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        .mapWrap iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .status {
+            padding: 10px 14px 0;
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.35;
+        }
+
+        .status b {
+            color: var(--text);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <header>
+            <div class="brand">
+                <div class="badge">🚒</div>
+                <div>
+                    <h1>Despacho – Malvinas Argentinas</h1>
+                    <div class="sub">Mapa + WhatsApp</div>
+                </div>
+            </div>
+            <div class="clock">
+                <div>Hora</div>
+                <strong id="now">--:--</strong>
+            </div>
+        </header>
+
+        <div class="grid">
+
+            <!-- FORM -->
+            <section class="card">
+                <div class="head">
+                    <h2>Datos</h2>
+                </div>
+                <div class="content">
+
+                    <div class="row">
+                        <div>
+                            <label for="waLocal">WhatsApp cuartel</label>
+                            <input id="waLocal" inputmode="numeric" value="1131434734" />
+                        </div>
+                        <div>
+                            <label for="horaSalida">Hora salida</label>
+                            <input id="horaSalida" inputmode="numeric" />
+                        </div>
+                    </div>
+
+                    <label>Categoría móvil</label>
+                    <div class="chipRow" id="vehChips">
+                        <div class="chip active" data-veh="primera">Primera/Inc/Resc</div>
+                        <div class="chip" data-veh="cisternas">Cisternas</div>
+                        <div class="chip" data-veh="traslado">Traslado</div>
+                    </div>
+
+                    <div class="row">
+                        <div>
+                            <label for="movilSel">Móvil</label>
+                            <select id="movilSel"></select>
+                        </div>
+                        <div>
+                            <label for="codigo">Código</label>
+                            <select id="codigo">
+                                <option value="I">I</option>
+                                <option value="II">II</option>
+                                <option value="III" selected>III</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Localidad fija -->
+                    <label>Localidad</label>
+                    <input value="Malvinas Argentinas" disabled />
+
+                    <div class="row">
+                        <div>
+                            <label for="direccion">Dirección / Esquina</label>
+                            <input id="direccion" placeholder="Estomba 1234 o Estomba y Uriburu" />
+                        </div>
+                        <div>
+                            <label for="referencia">Referencia</label>
+                            <input id="referencia" placeholder="frente a la plaza" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div>
+                            <label for="acargo">A cargo</label>
+                            <input id="acargo" placeholder="Sgto. Monroy" />
+                        </div>
+                        <div>
+                            <label for="chofer">Chofer</label>
+                            <input id="chofer" placeholder="Cabo Verón F." />
+                        </div>
+                    </div>
+
+                    <label for="componentes">Componentes</label>
+                    <input id="componentes" placeholder="Bro. Herrera – Bro. Verón M." />
+
+                    <div class="row">
+                        <div>
+                            <label for="tipoServicio">Tipo de servicio</label>
+                            <select id="tipoServicio">
+                                <option value="" selected>Elegir…</option>
+                                <option>Incendio de basural</option>
+                                <option>Incendio de casa</option>
+                                <option>Incendio de poste</option>
+                                <option>Rescate</option>
+                                <option>Ferroviario</option>
+                                <option>Comisión</option>
+                                <option>Rescate animal</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="nservicio">N° Servicio</label>
+                            <input id="nservicio" inputmode="numeric" placeholder="314" />
+                        </div>
+                    </div>
+
+                    <div class="btns">
+                        <button class="primary" id="btnPreview">Verificar mapa</button>
+                        <button class="ghost" id="btnCopy">Copiar</button>
+                        <button class="danger" id="btnWhats">WhatsApp</button>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- PREVIEW -->
+            <section class="card">
+                <div class="head">
+                    <h2>Confirmación</h2>
+                </div>
+                <div class="status" id="status"><b>Mapa:</b> sin verificar</div>
+                <div class="content" style="padding-top:10px;">
+                    <div class="msgBox" id="msgBox">Mensaje…</div>
+                </div>
+                <div class="mapWrap">
+                    <iframe id="mapFrame" src="about:blank" title="Mapa"></iframe>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script>
+        // Móviles
+        const VEHICLES = {
+            primera: ["20", "22", "24", "28", "30"],
+            cisternas: ["15", "25", "26", "32"],
+            traslado: ["29", "31"]
+        };
+
+        // Forzamos Malvinas Argentinas (Partido) SIEMPRE
+        const FIXED_LOCALITY = "Malvinas Argentinas";
+        const MA_SUFFIX = "Partido de Malvinas Argentinas, Provincia de Buenos Aires, Argentina";
+
+        const $ = (id) => document.getElementById(id);
+        const pad2 = (n) => String(n).padStart(2, '0');
+        const nowHHMM = () => { const d = new Date(); return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`; };
+        const safe = (v) => (v ?? "").trim();
+        const enc = (q) => encodeURIComponent(q.trim());
+
+        function isValidAddress(addr) {
+            const a = addr.toLowerCase().trim();
+            if (!a) return false;
+            const hasNumber = /\d/.test(a);
+            const isCorner = a.includes(" y ") || a.includes(" esquina ");
+            return hasNumber || isCorner;
+        }
+
+        function buildMapsLink(fullQuery) {
+            return `https://www.google.com/maps/search/?api=1&query=${enc(fullQuery)}`;
+        }
+        function buildEmbedSrc(fullQuery) {
+            return `https://maps.google.com/maps?q=${enc(fullQuery)}&t=m&z=16&output=embed`;
+        }
+
+        // WhatsApp AR → wa.me
+        function normalizeWhatsAppAR(input, defaultArea = "11") {
+            let digits = String(input || "").replace(/\D/g, "");
+            if (!digits) return "";
+            if (digits.startsWith("00")) digits = digits.slice(2);
+            if (digits.startsWith("549")) return digits;
+            if (digits.startsWith("54")) digits = digits.slice(2);
+            if (digits.startsWith("0")) digits = digits.slice(1);
+            if (digits.length === 8) digits = defaultArea + digits;
+            if (digits.startsWith(defaultArea + "15")) digits = defaultArea + digits.slice((defaultArea + "15").length);
+            else if (digits.startsWith("15")) digits = digits.slice(2);
+            return "549" + digits;
+        }
+
+        function collectData() {
+            const dirBase = safe($("direccion").value);
+            const direccionHuman = `${dirBase}, ${FIXED_LOCALITY}`;
+            const fullQuery = `${dirBase}, ${FIXED_LOCALITY}, ${MA_SUFFIX}`;
+            const mapsLink = dirBase ? buildMapsLink(fullQuery) : "";
+
+            return {
+                wa: normalizeWhatsAppAR($("waLocal").value, "11"),
+                hora: safe($("horaSalida").value) || nowHHMM(),
+                movil: $("movilSel").value,
+                codigo: $("codigo").value,
+                acargo: safe($("acargo").value),
+                chofer: safe($("chofer").value),
+                componentes: safe($("componentes").value),
+                direccionHuman,
+                fullQuery,
+                referencia: safe($("referencia").value),
+                tipoServicio: safe($("tipoServicio").value),
+                nservicio: safe($("nservicio").value),
+                mapsLink,
+                dirBase
+            };
+        }
+
+        function buildMessage(d) {
+            const lines = [];
+            lines.push("🚨 DESPLAZAMIENTO POR SERVICIO");
+            lines.push("");
+            lines.push(`⏰ Hora: ${d.hora || "--:--"}`);
+            lines.push(`🚒 Móvil: ${d.movil || "-"}`);
+            lines.push(`📟 Código: ${d.codigo || "-"}`);
+            lines.push("");
+            lines.push(`👨‍🚒 A cargo: ${d.acargo || "-"}`);
+            lines.push(`🚗 Chofer: ${d.chofer || "-"}`);
+            lines.push(`👥 Componentes: ${d.componentes || "-"}`);
+            lines.push("");
+            lines.push(`📍 Dirección: ${d.direccionHuman || "-"}`);
+            if (d.referencia) lines.push(`📌 Referencia: ${d.referencia}`);
+            lines.push(`🔥 Servicio: ${d.tipoServicio || "-"}`);
+            lines.push("");
+            lines.push(`🗺️ Mapa: ${d.mapsLink || "-"}`);
+            lines.push("");
+            lines.push(`🆔 Servicio N°: ${d.nservicio || "-"}`);
+            return lines.join("\n");
+        }
+
+        function updateUI() {
+            const d = collectData();
+            $("msgBox").textContent = buildMessage(d);
+            return d;
+        }
+
+        function setVehGroup(group) {
+            document.querySelectorAll("#vehChips .chip").forEach(ch => {
+                ch.classList.toggle("active", ch.dataset.veh === group);
+            });
+            const sel = $("movilSel");
+            sel.innerHTML = "";
+            VEHICLES[group].forEach(m => {
+                const o = document.createElement("option");
+                o.value = m; o.textContent = m;
+                sel.appendChild(o);
+            });
+            updateUI();
+        }
+
+        function previewMap() {
+            const d = updateUI();
+            if (!d.dirBase) {
+                alert("Falta dirección.");
+                $("direccion").focus(); return;
+            }
+            if (!isValidAddress(d.dirBase)) {
+                alert("Usá dirección o esquina.\nEj: Estomba 1234 / Estomba y Uriburu");
+                $("direccion").focus(); return;
+            }
+            $("mapFrame").src = buildEmbedSrc(d.fullQuery);
+            $("status").innerHTML = `<b>Mapa:</b> ${d.direccionHuman}`;
+        }
+
+        async function copyMessage() {
+            const d = updateUI();
+            const msg = buildMessage(d);
+            try { await navigator.clipboard.writeText(msg); }
+            catch (e) {
+                const ta = document.createElement("textarea");
+                ta.value = msg; document.body.appendChild(ta);
+                ta.select(); document.execCommand("copy");
+                document.body.removeChild(ta);
+            }
+        }
+
+        function openWhatsApp() {
+            const d = updateUI();
+            if (!d.wa) { alert("WhatsApp inválido."); $("waLocal").focus(); return; }
+            if (!d.dirBase || !isValidAddress(d.dirBase)) { alert("Dirección inválida."); $("direccion").focus(); return; }
+            const msg = buildMessage(d);
+            window.open(`https://wa.me/${d.wa}?text=${encodeURIComponent(msg)}`, "_blank");
+        }
+
+        function init() {
+            $("now").textContent = nowHHMM();
+            setInterval(() => $("now").textContent = nowHHMM(), 10000);
+            $("horaSalida").value = nowHHMM();
+
+            setVehGroup("primera");
+
+            document.querySelectorAll("#vehChips .chip").forEach(ch => {
+                ch.addEventListener("click", () => setVehGroup(ch.dataset.veh));
+            });
+
+            $("btnPreview").addEventListener("click", previewMap);
+            $("btnCopy").addEventListener("click", copyMessage);
+            $("btnWhats").addEventListener("click", openWhatsApp);
+
+            ["waLocal", "horaSalida", "movilSel", "codigo", "direccion", "referencia",
+                "acargo", "chofer", "componentes", "tipoServicio", "nservicio"
+            ].forEach(id => $(id).addEventListener("input", updateUI));
+
+            updateUI();
+        }
+        init();
+    </script>
+</body>
+
+</html>
